@@ -44,7 +44,7 @@ public class EvPayment {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public double getAmount() {
+	public int getAmount() {
 		return amount;
 	}
 	public void setAmount(int amount) {
