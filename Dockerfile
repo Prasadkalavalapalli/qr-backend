@@ -21,5 +21,5 @@ COPY --chown=myappuser:myappuser target/RazorPay-0.0.1-SNAPSHOT.jar app.jar
 # Expose port (documentation only - actual publishing happens at runtime)
 EXPOSE 8080
 
-# Use shell form for better signal handling
-ENTRYINTY exec java $JAVA_OPTS -jar app.jar
+# Corrected ENTRYPOINT instruction
+ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
