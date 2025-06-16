@@ -1,18 +1,25 @@
-# Use a minimal base image with OpenJDK 17
-FROM openjdk:17-jdk-slim
+# Use official OpenJDK 17 image with slim variant for smaller size
+FROM eclipse-temurin:17-jdk-jammy
 
 # Set environment variables
-ENV SPRING_PROFILES_ACTIVE=default \
-    TZ=Asia/Kolkata
+ENV SPRING_PROFILES_ACTIVE=prod \
+    TZ=UTC \
+    JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
 
-# Set the working directory inside the container
+# Create a non-root user and switch to it
+RUN useradd -m myappuser && \
+    mkdir -p /app && \
+    chown myappuser:myappuser /app
+USER myappuser
+
+# Set the working directory
 WORKDIR /app
 
-# Copy the built JAR file
-COPY target/RazorPay-0.0.1-SNAPSHOT.jar app.jar
+# Copy the JAR file (renamed for simplicity)
+COPY --chown=myappuser:myappuser target/RazorPay-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose the port Spring Boot uses
+# Expose port (documentation only - actual publishing happens at runtime)
 EXPOSE 8080
 
-# Run the app
-ENTRYPOINT ["java", "-jar", "app.jar"] 
+# Use shell form for better signal handling
+ENTRYINTY exec java $JAVA_OPTS -jar app.jar
